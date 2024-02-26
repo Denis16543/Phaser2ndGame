@@ -20,11 +20,12 @@ var game = new Phaser.Game(config);
 
 function preload() {
     this.load.image('fon', 'assets/fon.png');
-    this.load.image('fon', 'assets/fon.png');
+    
 }
 function create() {
    
-    this.add.image(800, 600, 'fon');
+    this.add.image(0, 0, 'fon').setOrigin(0,0);
+
 }
 
 
