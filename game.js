@@ -1,7 +1,7 @@
 var config = {
     type: Phaser.AUTO,
-    width: 800,
-    height: 600,
+    width: 1920,
+    height: 1080,
     parent: game,
     physics: {
         default: 'arcade',
@@ -17,3 +17,18 @@ var config = {
     }
 };
 var game = new Phaser.Game(config);
+
+function preload() {
+    this.load.image('fon', 'assets/fon.png');
+    this.load.image('fon', 'assets/fon.png');
+}
+function create() {
+   
+    this.add.image(800, 600, 'fon');
+}
+
+
+
+function update() {
+   
+}
