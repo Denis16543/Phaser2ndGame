@@ -32,6 +32,7 @@ function preload() {
     this.load.image('Tree','assets/Tree.png');
     this.load.image('TombStone (1)','assets/TombStone (1).png');
     this.load.image('TombStone (2)','assets/TombStone (2).png');
+    this.load.image('star','assets/star.png');
     
 }
 function create() {
@@ -57,7 +58,7 @@ function create() {
 
     //Колізія гравця та платформ
     this.physics.add.collider(player, platforms);
-    
+
     this.anims.create({
         key: 'left',
         frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
@@ -78,6 +79,31 @@ function create() {
         repeat: -1
     });
      cursors = this.input.keyboard.createCursorKeys();
+     this.physics.add.collider(player, platforms);
+    cursors = this.input.keyboard.createCursorKeys();
+    stars = this.physics.add.group({
+        key: 'star',
+        repeat: 11,
+        setXY: { x: 12, y: 0, stepX: 70 }
+    });
+
+    stars.children.iterate(function (child) {
+
+        child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
+
+    });
+    function collectStar(player, star) {
+        star.disableBody(true, true);
+    }
+    this.physics.add.collider(stars, platforms);
+    this.physics.add.overlap(player, stars, collectStar, null, this);
+    var score = 0;
+    var scoreText;
+
+   
+
+            
+   
 
      
 }
