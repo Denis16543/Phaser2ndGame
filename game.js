@@ -43,9 +43,23 @@ function create() {
         //створення платформи
     platforms.create(x, 1080 - 128, 'platform').setOrigin(0,0).refreshBody();
     }
+  
+//створення дикорацій
+    platforms.create(400, 930, 'TombStone (1)');
+    platforms.create(800, 915, 'TombStone (2)');
+    platforms.create(1600, 915, 'TombStone (2)');
+    platforms.create(1200, 900, 'Crate');
+    platforms.create(3000, 900, 'Crate');
+    platforms.create(2000, 900, 'Crate');
+    platforms.create(2300, 915, 'TombStone (2)');
+    platforms.create(2700, 930, 'TombStone (1)');
+
+
+
+
 
     //створення гравця
-    player = this.physics.add.sprite(1500, 900, 'dude');
+    player = this.physics.add.sprite(100, 900, 'dude');
     player.setBounce(0.2);
     player.setCollideWorldBounds(false);
 
