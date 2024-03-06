@@ -139,17 +139,29 @@ function create() {
 
 
 
-        Tree = this.physics.add.staticGroup();
-
-        for (var x = 0; x < worldWidth; x= x + Phaser.Math.FloatBetween(500, 1000)){
-    
-    
-            Tree.create(x, 1080 - 128, 'Tree')
-            .setOrigin(0,1)
-            .setScale(Phaser.Math.FloatBetween(0.5, 2))
-            .setDepth(Phaser.Math.Between(1, 10));
-        }
+      
     }
+    for (var x = 0; x < worldWidth; x = x + Phaser.Math.Between(256.500)){
+        var y = Phaser.Math.Between(128,810)
+
+        platforms.create(x, y, '14')
+        var i
+        for(i = 1; i<=Phaser.Math.Between(1,5); i++){
+            platforms.create(x + 128 * i, y, '15')
+        }
+
+        platforms.create(x + 128 *i, y, '16')
+
+    }
+
+
+
+
+
+
+
+
+
 }
 
 
