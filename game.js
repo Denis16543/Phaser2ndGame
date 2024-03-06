@@ -4,6 +4,7 @@ var config = {
     width: 1920,
     height:1080,
     parent: game,
+    playerSpeed:1000, 
     physics: {
         default: 'arcade',
         arcade: {
@@ -21,6 +22,16 @@ var game = new Phaser.Game(config);
 //розмір світу
 var worldWidth = 9600;
 
+var player
+var stars
+var platforms
+var cursors
+var score = 0
+var scoreText
+var gameOver = false
+var playerSpeed = 1000
+var worldWidth = config.width * 10
+
 function preload() {
     this.load.image('fon', 'assets/fon.png');
     //фон
@@ -33,7 +44,10 @@ function preload() {
     this.load.image('TombStone (1)','assets/TombStone (1).png');
     this.load.image('TombStone (2)','assets/TombStone (2).png');
     this.load.image('star','assets/star.png');
-    
+    this.load.image('14','assets/14.png');
+    this.load.image('15','assets/15.png');
+    this.load.image('16','assets/16.png');
+    this.load.image('Bush','assets/Bush.png');
 }
 function create() {
    //створення фону
@@ -41,18 +55,17 @@ function create() {
     platforms = this.physics.add.staticGroup();
     for (var x=0; x< worldWidth; x=x + 384) {console.log(x)
         //створення платформи
-    platforms.create(x, 1080 - 128, 'platform').setOrigin(0,0).refreshBody();
+    platforms
+    .create(x, 1080 - 128, 'platform')
+    .setOrigin(0,0)
+    .refreshBody();
     }
   
 //створення дикорацій
-    platforms.create(400, 930, 'TombStone (1)');
-    platforms.create(800, 915, 'TombStone (2)');
-    platforms.create(1600, 915, 'TombStone (2)');
     platforms.create(1200, 900, 'Crate');
     platforms.create(3000, 900, 'Crate');
     platforms.create(2000, 900, 'Crate');
-    platforms.create(2300, 915, 'TombStone (2)');
-    platforms.create(2700, 930, 'TombStone (1)');
+ 
 
 
 
@@ -114,12 +127,29 @@ function create() {
     var score = 0;
     var scoreText;
 
-   
+    Bush = this.physics.add.staticGroup();
 
-            
-   
+    for (var x = 0; x < worldWidth; x= x + Phaser.Math.FloatBetween(500, 1000)){
 
-     
+
+        Bush.create(x, 1080 - 128, 'Bush')
+        .setOrigin(0,1)
+        .setScale(Phaser.Math.FloatBetween(0.5, 2))
+        .setDepth(Phaser.Math.Between(1, 10));
+
+
+
+        Tree = this.physics.add.staticGroup();
+
+        for (var x = 0; x < worldWidth; x= x + Phaser.Math.FloatBetween(500, 1000)){
+    
+    
+            Tree.create(x, 1080 - 128, 'Tree')
+            .setOrigin(0,1)
+            .setScale(Phaser.Math.FloatBetween(0.5, 2))
+            .setDepth(Phaser.Math.Between(1, 10));
+        }
+    }
 }
 
 
@@ -146,7 +176,6 @@ function update() {
     if (cursors.up.isDown && player.body.touching.down) {
         player.setVelocityY(-330);
     }
-
 
 
 
