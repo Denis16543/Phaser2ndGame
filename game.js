@@ -38,7 +38,7 @@ function preload() {
     this.load.image('fon 1','assets/fon 1.jpg');
     //платформа
     this.load.image('platform','assets/platform.png');
-    this.load.spritesheet('dude', 'assets/dude.png', {frameWidth: 32, frameHeight: 48});
+    this.load.spritesheet('dude', 'assets/dude.png', {frameWidth: 346, frameHeight: 458});
     this.load.image('Crate','assets/Crate.png');
     this.load.image('Tree','assets/Tree.png');
     this.load.image('TombStone (1)','assets/TombStone (1).png');
@@ -48,12 +48,14 @@ function preload() {
     this.load.image('15','assets/15.png');
     this.load.image('16','assets/16.png');
     this.load.image('Bush','assets/Bush.png');
+    this.load.image('bomb', 'assets/bomb.png');
 }
 function create() {
    //створення фону
     this.add.tileSprite(0, 0, worldWidth, 1080, "fon 1").setOrigin(0, 0);
     platforms = this.physics.add.staticGroup();
-    for (var x=0; x< worldWidth; x=x + 384) {console.log(x)
+    for (var x=0; x< worldWidth; x=x + 384) {
+        //console.log(x)
         //створення платформи
     platforms
     .create(x, 1080 - 128, 'platform')
@@ -72,7 +74,7 @@ function create() {
 
 
     //створення гравця
-    player = this.physics.add.sprite(100, 900, 'dude');
+    player = this.physics.add.sprite(500, 200, 'dude');
     player.setBounce(0.2);
     player.setCollideWorldBounds(false);
 
@@ -141,28 +143,50 @@ function create() {
 
       
     }
-    for (var x = 0; x < worldWidth; x = x + Phaser.Math.Between(256.500)){
-        var y = Phaser.Math.Between(128,810)
+    
 
-        platforms.create(x, y, '14')
-        var i
-        for(i = 1; i<=Phaser.Math.Between(1,5); i++){
-            platforms.create(x + 128 * i, y, '15')
-        }
+    
 
-        platforms.create(x + 128 *i, y, '16')
+   
 
+    function collectStar(player, star) {
+        star.disableBody(true, true);
     }
+    this.physics.add.collider(stars, platforms);
+    this.physics.add.overlap(player, stars, collectStar, null, this);
+    var score = 0;
+    var scoreText;
+    function collectStar(player, star) {
+        star.disableBody(true, true);
 
+        score += 10;
+        scoreText.setText('Score: ' + score);
 
+        if (stars.countActive(true) === 0) {
+            stars.children.iterate(function (child) {
 
+                child.enableBody(true, child.x, 0, true, true);
 
+            });
 
+            var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
 
+            var bomb = bombs.create(x, 16, 'bomb');
+            bomb.setBounce(1);
+            bomb.setCollideWorldBounds(true);
+            bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
+bomb.setScale(0.1,0.1)
+        }
+    }
+    scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: 'white' });
+    bombs = this.physics.add.group();
 
+    this.physics.add.collider(bombs, platforms);
 
+    this.physics.add.collider(player, bombs,  null, this);
 
 }
+
 
 
 
@@ -191,4 +215,13 @@ function update() {
 
 
 
+}
+function hitBomb(player, bomb) {
+    this.physics.pause();
+
+    player.setTint(0xff0000);
+
+    player.anims.play('turn');
+
+    gameOver = true;
 }
