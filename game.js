@@ -21,7 +21,7 @@ var config = {
 var game = new Phaser.Game(config);
 //розмір світу
 var worldWidth = 9600;
-
+var life = 5
 var player
 var stars
 var platforms
@@ -29,7 +29,7 @@ var cursors
 var score = 0
 var scoreText
 var gameOver = false
-var playerSpeed = 1000
+var playerSpeed = 10
 var worldWidth = config.width * 10
 
 function preload() {
@@ -38,7 +38,7 @@ function preload() {
     this.load.image('fon 1','assets/fon 1.jpg');
     //платформа
     this.load.image('platform','assets/platform.png');
-    this.load.spritesheet('dude', 'assets/dude.png', {frameWidth: 346, frameHeight: 458});
+    this.load.spritesheet('dude', 'assets/dude.png', {frameWidth: 32, frameHeight: 48});
     this.load.image('Crate','assets/Crate.png');
     this.load.image('Tree','assets/Tree.png');
     this.load.image('TombStone (1)','assets/TombStone (1).png');
@@ -67,8 +67,7 @@ function create() {
     platforms.create(1200, 900, 'Crate');
     platforms.create(3000, 900, 'Crate');
     platforms.create(2000, 900, 'Crate');
- 
-
+   
 
 
 
@@ -148,7 +147,7 @@ function create() {
     
 
    
-
+  
     function collectStar(player, star) {
         star.disableBody(true, true);
     }
@@ -160,30 +159,77 @@ function create() {
         star.disableBody(true, true);
 
         score += 10;
-        scoreText.setText('Score: ' + score);
+        scoreText.setText('Score: 0' + score);
 
-        if (stars.countActive(true) === 0) {
-            stars.children.iterate(function (child) {
-
-                child.enableBody(true, child.x, 0, true, true);
-
-            });
-
-            var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
-
-            var bomb = bombs.create(x, 16, 'bomb');
-            bomb.setBounce(1);
-            bomb.setCollideWorldBounds(true);
-            bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
-bomb.setScale(0.1,0.1)
-        }
     }
-    scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: 'white' });
-    bombs = this.physics.add.group();
+  
 
-    this.physics.add.collider(bombs, platforms);
+   
 
-    this.physics.add.collider(player, bombs,  null, this);
+
+
+
+//Рахунок 
+scoreText = this.add.text(100 , 100 , 'Score: 0', {fontSize: '20px', fill: '#FFF'})
+.setOrigin(0, 0)
+.setScrollFactor(0)
+
+
+//Життя
+lifeText = this.add.text(1500, 100, showLife(), { fontSize: '40px', fill: '#FFF'})
+.setOrigin(0, 0)
+.setScrollFactor(0)
+
+
+//Кнопка перезапуску гри
+var resetButtor = this.add.text(400, 450, 'reset', {fontSize: '40px', fill: '#ccc'})
+.setInteractive()
+.setScrollFactor(0);
+
+resetButtor.on('pointerdown' , function () {
+    console.log('restart')
+    refreshBody()
+
+});
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }
 
@@ -225,3 +271,60 @@ function hitBomb(player, bomb) {
 
     gameOver = true;
 }
+
+//Формування смуги життя
+function showLife() {
+    var lifeLine = ''
+
+    for (var i = 0; i < life; i++) {
+        lifeLine = lifeLine + '🤍'
+        // lifeLine += '❤'
+        //console.log(life)
+    }
+    return lifeLine
+
+
+
+  //Створення бомби
+  var x = Phaser.Math.Between(0, worldWidth);
+  var y = Phaser.Math.Between(0, config.height);
+  var bomb = bombs.create(x, 0, 'bomb');
+  bomb.setScale(0.25);
+  bomb.setBounce(1);
+  bomb.setCollideWorldBounds(true);
+  bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
+
+    
+
+
+
+
+
+
+
+
+
+
+
+}
+//Перезапуск гри
+function refreshBody() {
+    console.log('game over')
+    location.reload()
+    //this.scene.restart();
+};
+
+//Відпрацювання колізії гравця та бомб
+function hitBomb(player , bomb) {
+    //this.physics.pause();
+    bomb.disableBody(true, true);
+    player.setTint(0xff0000);
+    life -= 1
+    lifeText.setText(showLife())
+
+    console.log('boom')
+    player.anims.play('turn');
+    if (life == 0) gameOver = true;
+}
+
+    
