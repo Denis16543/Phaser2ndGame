@@ -182,7 +182,7 @@ lifeText = this.add.text(1500, 100, showLife(), { fontSize: '40px', fill: '#FFF'
 
 
 //Кнопка перезапуску гри
-var resetButtor = this.add.text(400, 450, 'reset', {fontSize: '40px', fill: '#ccc'})
+var resetButtor = this.add.text(100, 150, 'reset', {fontSize: '40px', fill: '#ccc'})
 .setInteractive()
 .setScrollFactor(0);
 
