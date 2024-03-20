@@ -49,7 +49,7 @@ function preload() {
     this.load.image('16','assets/16.png');
     this.load.image('Bush','assets/Bush.png');
     this.load.image('bomb', 'assets/bomb.png');
-    this.load.image('Idle', 'assets/Idle.png', {frameWidth: 32, frameHeight: 48});
+    this.load.image('enemy', 'assets/Idle.png', {frameWidth: 32, frameHeight: 48});
 }
 function create() {
    //створення фону
@@ -69,17 +69,6 @@ function create() {
     platforms.create(3000, 900, 'Crate');
     platforms.create(2000, 900, 'Crate');
 
-
-     //створення ворога
-     Idle = this.physics.add.sprite(600, 200, 'Idle');
-     Idle.setBounce(0.2);
-     Idle.setCollideWorldBounds(false);
- 
-   
-
-
-
-
     //створення гравця
     player = this.physics.add.sprite(500, 200, 'dude');
     player.setBounce(0.2);
@@ -94,7 +83,7 @@ function create() {
 
     //Колізія гравця та платформ
     this.physics.add.collider(player, platforms);
-    this.physics.add.collider(Idle, platforms);
+   
 
     this.anims.create({
         key: 'left',
@@ -222,6 +211,27 @@ for (var x = 0; x< worldWidth; x = x + Phaser.Math.Between(256,500)){
  bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
 
 
+ //Додаємо ворогів випадковим чином 
+
+ enemy = this.physics.add.group({
+    key: 'enemy' ,
+    repeat: enemyCount,
+    setXY: { x: 1000, y: 1080 - 150, stepX: Phaser.Math.FloatBetween(300, 500)}
+ });
+
+ enemy.children.iterate(function (child){
+    child
+    .setCollideWorldBounds(true).
+    setVelocityX(Phaser.Math.FloatBetween(-500, 500))
+
+ });
+
+ //Кількість ворогів
+ enemyText = this.add.text(300, 50, showTextSymbols('💀', enemyCount), { fontSize: '40px', fill: '#FFF'})
+ .setOrigin(0, 0)
+ .setScrollFactor(0);
+
+
 
  }
 
@@ -305,6 +315,16 @@ function hitBomb(player , bomb) {
     console.log('boom')
     player.anims.play('turn');
     if (life == 0) gameOver = true;
+}
+//Формування смуги символів
+function showTextSymbols(symbol, count) {
+    var symbolLine = ''
+
+    for (var i = 0; i < count; i++) {
+        symbolLine = symbolLine + symbol
+    }
+
+    return symbolLine
 }
 
 
