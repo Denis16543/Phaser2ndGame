@@ -212,6 +212,14 @@ for (var x = 0; x< worldWidth; x = x + Phaser.Math.Between(256,500)){
     }
     platforms.create(x + 128 * i, y, 'platform')
 }
+ //Створення бомби
+ var x = Phaser.Math.Between(0, worldWidth);
+ var y = Phaser.Math.Between(0, config.height);
+ var bomb = bomb.create(x, 0, 'bomb');
+ bomb.setScale(0.25);
+ bomb.setBounce(1);
+ bomb.setCollideWorldBounds(true);
+ bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
 
 
 
@@ -299,12 +307,5 @@ function hitBomb(player , bomb) {
     if (life == 0) gameOver = true;
 }
 
- //Створення бомби
- var x = Phaser.Math.Between(0, worldWidth);
- var y = Phaser.Math.Between(0, config.height);
- var bomb = bomb.create(x, 0, 'bomb');
- bomb.setScale(0.25);
- bomb.setBounce(1);
- bomb.setCollideWorldBounds(true);
- bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
+
  
