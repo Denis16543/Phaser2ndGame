@@ -51,6 +51,7 @@ function preload() {
     this.load.image('Bush', 'assets/Bush.png');
     this.load.image('bomb', 'assets/bomb.png');
     this.load.image('enemy', 'assets/Idle.png', { frameWidth: 32, frameHeight: 48 });
+    this.load.image('life', 'assets/life.png');
 }
 function create() {
     //створення фону
@@ -108,9 +109,11 @@ function create() {
     cursors = this.input.keyboard.createCursorKeys();
     this.physics.add.collider(player, platforms);
     cursors = this.input.keyboard.createCursorKeys();
+    
+    //
     stars = this.physics.add.group({
         key: 'star',
-        repeat: 11,
+        repeat: 140,
         setXY: { x: 12, y: 0, stepX: 70 }
     });
 
@@ -123,9 +126,11 @@ function create() {
 
 
 
-    function collectStar(player, star) {
-        star.disableBody(true, true);
-    }
+    // function collectStar(player, star) {
+    //     star.disableBody(true, true);
+    // }
+
+
     this.physics.add.collider(stars, platforms);
     this.physics.add.overlap(player, stars, collectStar, null, this);
     var score = 0;
@@ -171,7 +176,7 @@ function create() {
             bomb.setBounce(1);
             bomb.setCollideWorldBounds(true);
             bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
-bomb.setScale(0.1,0.1)
+            bomb.setScale(0.1,0.1)
         }
     }
     scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
@@ -210,16 +215,17 @@ bomb.setScale(0.1,0.1)
         refreshBody()
 
     });
+    //Створення платформ
+    for (var x = 0; x < worldWidth; x = x + Phaser.Math.Between(600, 800)) {
 
-    for (var x = 0; x < worldWidth; x = x + Phaser.Math.Between(256, 500)) {
-        var y = Phaser.Math.Between(128, 810)
+        var y = Phaser.Math.Between(500, 800)
 
-        platforms.create(x, y, 'platform')
+        platforms.create(x, y, '14')
         var i
-        for (i = 1; i <= Phaser.Math.Between(1, 5); i++) {
-            platforms.create(x + 128 * i, y, 'platform')
+        for (i = 1; i <= Phaser.Math.Between(0, 3); i++) {
+            platforms.create(x + 128 * i, y, '15')
         }
-        platforms.create(x + 128 * i, y, 'platform')
+        platforms.create(x + 128 * i , y, '16')
     }
     
 
@@ -229,13 +235,14 @@ bomb.setScale(0.1,0.1)
     enemy = this.physics.add.group({
         key: 'enemy',
         repeat: enemyCount,
-        setXY: { x: 1000, y: 1080 - 150, stepX: Phaser.Math.FloatBetween(300, 500) }
+        setXY: { x: 1000, y: 300, stepX: Phaser.Math.FloatBetween(300, 500) }
     });
 
     enemy.children.iterate(function (child) {
         child
             .setCollideWorldBounds(true).
             setVelocityX(Phaser.Math.FloatBetween(-500, 500))
+            .setScale(0.3);
 
     });
 
@@ -246,8 +253,21 @@ bomb.setScale(0.1,0.1)
     this.physics.add.collider(player , enemy, () => {
 
         player.x = player.x + Phaser.Math.FloatBetween(-200, 200);
-    }, null, this);   
+    }, null, this); 
+    this.physics.add.collider(enemy, platforms);  
 
+    life = this.physics.add.group({
+        key: 'life',
+        repeat: 10,
+        setXY: { x: 1000, y: 300, stepX: Phaser.Math.FloatBetween(300, 500) }
+    });
+
+    life.children.iterate(function (child) {
+        child
+            .setCollideWorldBounds(true);
+
+    });
+    
 
 
 }
@@ -259,12 +279,12 @@ bomb.setScale(0.1,0.1)
 function update() {
 
     if (cursors.left.isDown) {
-        player.setVelocityX(-160);
+        player.setVelocityX(-320);
 
         player.anims.play('left', true);
     }
     else if (cursors.right.isDown) {
-        player.setVelocityX(160);
+        player.setVelocityX(320);
 
         player.anims.play('right', true);
     }
@@ -307,18 +327,21 @@ function showLife() {
         //console.log(life)
     }
     return lifeLine
+}
 
 
 
-
-
-
-
+function collectHeart(player, heart){
+    heart.disableBody(true, true);
+    life += 1;
+    lifeText.setText(showLife());
+    console.log(life)
 
 
 
 
 }
+
 //Перезапуск гри
 function refreshBody() {
     console.log('game over')
