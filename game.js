@@ -51,7 +51,7 @@ function preload() {
     this.load.image('Bush', 'assets/Bush.png');
     this.load.image('bomb', 'assets/bomb.png');
     this.load.image('enemy', 'assets/Idle.png', { frameWidth: 32, frameHeight: 48 });
-    this.load.image('life', 'assets/life.png');
+    this.load.image('life', 'assets/life.gif');
 }
 function create() {
     //створення фону
@@ -85,6 +85,7 @@ function create() {
 
     //Колізія гравця та платформ
     this.physics.add.collider(player, platforms);
+    this.physics.add.collider(life, platforms);
 
 
     this.anims.create({
@@ -295,7 +296,7 @@ function update() {
     }
 
     if (cursors.up.isDown && player.body.touching.down) {
-        player.setVelocityY(-330);
+        player.setVelocityY(-500);
     }
 
     //Зміна напрянку руху ворога
