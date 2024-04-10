@@ -33,6 +33,7 @@ var gameOver = false
 var playerSpeed = 10
 var worldWidth = config.width * 10
 
+
 function preload() {
     this.load.image('fon', 'assets/fon.png');
     //фон
@@ -161,6 +162,11 @@ function create() {
     function collectStar(player, star) {
         star.disableBody(true, true);
 
+        var bomb = bombs.create(20, 20, 'bomb').setScale(0.2);
+        bomb.setBounce(1);
+        bomb.setCollideWorldBounds(true);
+        bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
+
         score += 10;
         scoreText.setText('Score: ' + score);
 
@@ -173,11 +179,7 @@ function create() {
 
             var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
 
-            var bomb = bombs.create(x, 16, 'bomb');
-            bomb.setBounce(1);
-            bomb.setCollideWorldBounds(true);
-            bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
-            bomb.setScale(0.1,0.1)
+    
         }
     }
     scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
@@ -279,6 +281,10 @@ function create() {
 
 function update() {
 
+    if (life == 0) {
+        this.physics.pause();
+    }
+
     if (cursors.left.isDown) {
         player.setVelocityX(-320);
 
@@ -309,13 +315,14 @@ function update() {
 
 }
 function hitBomb(player, bomb) {
+    bomb.disableBody(true, true)
     this.physics.pause();
 
+    life -= 1;
+    LivesText.setText(showlife());
     player.setTint(0xff0000);
 
     player.anims.play('turn');
-
-    gameOver = true;
 }
 
 //Формування смуги життя
@@ -324,7 +331,7 @@ function showLife() {
 
     for (var i = 0; i < life; i++) {
         lifeLine = lifeLine + '🤍'
-        // lifeLine += '❤'
+        //lifeLine += '❤'
         //console.log(life)
     }
     return lifeLine
@@ -355,7 +362,7 @@ function hitBomb(player, bomb) {
     //this.physics.pause();
     bomb.disableBody(true, true);
     player.setTint(0xff0000);
-    life -= 1
+    life--;
     lifeText.setText(showLife())
 
     console.log('boom')
